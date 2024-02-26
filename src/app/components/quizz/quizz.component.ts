@@ -1,69 +1,78 @@
 import { Component, OnInit } from '@angular/core';
-import quizz_questions from '../../../assets/data/quizz_questions.json';
+import quizz_questions from "../../../assets/data/quizz_questions.json"
 
 @Component({
   selector: 'app-quizz',
   templateUrl: './quizz.component.html',
-  styleUrls: ['./quizz.component.css'],
+  styleUrls: ['./quizz.component.css']
 })
+
 export class QuizzComponent implements OnInit {
-  title: string = '';
 
-  questions: any;
-  questionSelected: any;
+  title:string = ""
 
-  answers: string[] = [];
-  answersSelected: string = '';
+  questions:any
+  questionSelected:any
 
-  questionIndex: number = 0;
-  questionMaxIndex: number = 0;
+  answers:string[] = []
+  answerSelected:string =""
 
-  finished: boolean = false;
+  questionIndex:number =0
+  questionMaxIndex:number=0
 
-  constructor() {}
+  finished:boolean = false
+
+  constructor() { }
 
   ngOnInit(): void {
-    if (quizz_questions) {
-      this.finished = false;
-      this.title = quizz_questions.title;
+    if(quizz_questions){
+      this.finished = false
+      this.title = quizz_questions.title
 
-      this.questions = quizz_questions.questions;
-      this.questionSelected = this.questions[this.questionIndex];
+      this.questions = quizz_questions.questions
+      this.questionSelected = this.questions[this.questionIndex]
 
-      this.questionIndex = 0;
-      this.questionMaxIndex = this.questions.length;
+      this.questionIndex = 0
+      this.questionMaxIndex = this.questions.length
+
+      console.log(this.questionIndex)
+      console.log(this.questionMaxIndex)
     }
+
   }
 
-  playerChoose(value: string) {
-    this.answers.push(value);
-    this.nextStep();
+  playerChoose(value:string){
+    this.answers.push(value)
+    this.nextStep()
+
   }
 
-  async nextStep() {
-    this.questionMaxIndex += 1;
+  async nextStep(){
+    this.questionIndex+=1
 
-    if (this.questionMaxIndex > this.questionIndex) {
-      this.questionSelected = this.questions[this.questionIndex];
-    } else {
+    if(this.questionMaxIndex > this.questionIndex){
+        this.questionSelected = this.questions[this.questionIndex]
+    }else{
       const finalAnswer:string = await this.checkResult(this.answers)
-      this.finished = true;
-      this.answersSelected = quizz_questions.results[finalAnswer as keyof typeof quizz_questions.results]
+      this.finished = true
+      this.answerSelected = quizz_questions.results[finalAnswer as keyof typeof quizz_questions.results ]
     }
   }
-  async checkResult(answers: string[]) {
-     const result = answers.reduce((previous, current, i, arr) => {
-      if(
-      arr.filter(item => item === previous).length >
-      arr.filter(item => item === current).length 
-      ){
-      return previous    
-      }else{
-      return current
-      }
-    });
-      return result
-  }
 
+  async checkResult(anwsers:string[]){
+
+    const result = anwsers.reduce((previous, current, i, arr)=>{
+        if(
+          arr.filter(item => item === previous).length >
+          arr.filter(item => item === current).length
+        ){
+          return previous
+        }else{
+          return current
+        }
+    })
+
+    return result
+  }
 
 }
